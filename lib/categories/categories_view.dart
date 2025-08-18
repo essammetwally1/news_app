@@ -3,7 +3,8 @@ import 'package:news_app/categories/category_item.dart';
 import 'package:news_app/models/category_model.dart';
 
 class CategoriesView extends StatelessWidget {
-  const CategoriesView({super.key});
+  final Function(CategoryModel) onSelectCategory;
+  const CategoriesView({super.key, required this.onSelectCategory});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,9 @@ class CategoriesView extends StatelessWidget {
           Expanded(
             child: ListView.separated(
               itemBuilder: (context, index) => InkWell(
-                onTap: () {},
+                onTap: () {
+                  onSelectCategory(CategoryModel.categories[index]);
+                },
                 child: CategoryItem(
                   categoryName: CategoryModel.categories[index].imagePath,
                 ),

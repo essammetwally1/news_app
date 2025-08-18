@@ -6,7 +6,8 @@ import 'package:news_app/news/news_item.dart';
 import 'package:news_app/news/tab_item.dart';
 
 class NewsView extends StatefulWidget {
-  const NewsView({super.key});
+  final String categoryId;
+  const NewsView({super.key, required this.categoryId});
 
   @override
   State<NewsView> createState() => _NewsViewState();
