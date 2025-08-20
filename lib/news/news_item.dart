@@ -55,14 +55,18 @@ class _NewsItemState extends State<NewsItem> {
                 : SizedBox(),
             Row(
               children: [
-                Text(
-                  'By: ${widget.articleModel.author ?? widget.articleModel.source.id}',
-                  style: textTheme.titleSmall,
+                Expanded(
+                  child: Text(
+                    'By: ${widget.articleModel.author ?? widget.articleModel.source.id}',
+                    style: textTheme.titleSmall,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 Spacer(),
                 Text(
                   timeago.format(widget.articleModel.publishedAt!),
                   style: textTheme.titleSmall,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

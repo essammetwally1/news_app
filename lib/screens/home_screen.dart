@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:news_app/app_theme.dart';
 import 'package:news_app/categories/categories_view.dart';
 import 'package:news_app/components/home_drawer.dart';
 import 'package:news_app/models/category_model.dart';
@@ -14,18 +16,95 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   CategoryModel? selectedCategory;
+  String? searchFor;
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocus = FocusNode();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(selectedCategory == null ? 'Home' : selectedCategory!.name),
-        surfaceTintColor: Colors.transparent,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
+          title: _isSearching
+              ? TextField(
+                  controller: _searchController,
+                  focusNode: _searchFocus,
+                  autofocus: true,
+                  cursorColor: AppTheme.white,
+                  style: const TextStyle(color: AppTheme.white, fontSize: 16),
+                  decoration: InputDecoration(
+                    suffixIcon: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: InkWell(
+                        onTap: () {
+                          if (searchFor != null) {
+                            selectedCategory = CategoryModel(
+                              id: searchFor!,
+                              name: searchFor!.toUpperCase(),
+                              imagePath: '',
+                            );
+                            setState(() {});
+                          }
+                        },
+                        child: SvgPicture.asset('assets/icons/search.svg'),
+                      ),
+                    ),
+                    hintText: 'Search...',
+                    hintStyle: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(color: AppTheme.white.withValues(alpha: .7)),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: AppTheme.white,
+                        width: 1,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(
+                        color: AppTheme.white,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    _searchController.clear();
+                    _isSearching = false;
+                    searchFor = null;
+                    setState(() {});
+                  },
+                  onChanged: (value) {
+                    searchFor = value;
+                  },
+                )
+              : Text(
+                  selectedCategory == null ? 'Home' : selectedCategory!.name,
+                ),
+          actions: [
+            !_isSearching
+                ? IconButton(
+                    icon: SvgPicture.asset('assets/icons/search.svg'),
+                    onPressed: () {
+                      setState(() {
+                        _isSearching = true;
+                      });
+                    },
+                  )
+                : SizedBox(),
+            const SizedBox(width: 16),
+          ],
+        ),
+        drawer: HomeDrawer(goToHome: goToHome),
+        body: selectedCategory == null
+            ? CategoriesView(onSelectCategory: onSelectCategory)
+            : NewsView(categoryId: selectedCategory!.id),
       ),
-      drawer: HomeDrawer(goToHome: goToHome),
-
-      body: selectedCategory == null
-          ? CategoriesView(onSelectCategory: onSelectCategory)
-          : NewsView(categoryId: selectedCategory!.id),
     );
   }
 

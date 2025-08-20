@@ -63,36 +63,43 @@ class _NewsViewState extends State<NewsView> {
                 ),
               ),
 
-              Expanded(
-                child: FutureBuilder(
-                  future: ApiService.getNews(sources[currentIndex].id!),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return LoadingIndicator();
-                    } else if (snapshot.hasError ||
-                        snapshot.data!.status != 'ok') {
-                      print(snapshot.error);
-                      return ErrorIndicator();
-                    } else {
-                      List<ArticleModel> articles =
-                          snapshot.data?.articles ?? [];
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          left: 16,
-                          right: 16,
-                          top: 16,
-                        ),
-                        child: ListView.separated(
-                          itemBuilder: (_, index) =>
-                              NewsItem(articleModel: articles[index]),
-                          separatorBuilder: (_, _) => SizedBox(height: 16),
-                          itemCount: articles.length,
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
+              sources.isNotEmpty
+                  ? Expanded(
+                      child: FutureBuilder(
+                        future: ApiService.getNews(sources[currentIndex].id!),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return LoadingIndicator();
+                          } else if (snapshot.hasError ||
+                              snapshot.data!.status != 'ok') {
+                            print(snapshot.error);
+                            return ErrorIndicator();
+                          } else {
+                            List<ArticleModel> articles =
+                                snapshot.data?.articles ?? [];
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                left: 16,
+                                right: 16,
+                                top: 16,
+                              ),
+                              child: ListView.separated(
+                                itemBuilder: (_, index) =>
+                                    NewsItem(articleModel: articles[index]),
+                                separatorBuilder: (_, _) =>
+                                    SizedBox(height: 16),
+                                itemCount: articles.length,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    )
+                  : Text(
+                      'No Data',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
             ],
           );
         }
