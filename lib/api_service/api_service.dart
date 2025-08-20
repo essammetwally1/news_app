@@ -28,4 +28,16 @@ class ApiService {
 
     return NewsResponse.fromJson(json);
   }
+
+  static Future<NewsResponse> getAllNews(String searchWord) async {
+    Uri uri = Uri.https(ApiConsts.baseUrl, ApiConsts.apiEverythingEndpoint, {
+      'apiKey': ApiConsts.apiKey,
+      'q': searchWord,
+    });
+    http.Response resresponse = await http.get(uri);
+
+    Map<String, dynamic> json = jsonDecode(resresponse.body);
+
+    return NewsResponse.fromJson(json);
+  }
 }

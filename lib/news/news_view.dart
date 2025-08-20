@@ -36,6 +36,7 @@ class _NewsViewState extends State<NewsView> {
           List<SourceModel> sources = snapshot.data?.sources ?? [];
           return Column(
             children: [
+              SizedBox(height: 16),
               DefaultTabController(
                 length: sources.length,
 
