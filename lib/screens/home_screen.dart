@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     suffixIcon: Padding(
                       padding: const EdgeInsets.all(10),
                       child: InkWell(
+                        splashColor: Colors.transparent,
                         onTap: () {
                           if (searchFor != null) {
                             selectedCategory = CategoryModel(
