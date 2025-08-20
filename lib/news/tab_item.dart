@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/models/source_model.dart';
+import 'package:news_app/models/api_source_model.dart';
 
 class TabItem extends StatelessWidget {
   final SourceModel sourceModel;
@@ -15,9 +15,9 @@ class TabItem extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     return isSelected
         ? Text(
-            sourceModel.name,
+            sourceModel.name ?? 'News.com',
             style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
           )
-        : Text(sourceModel.name, style: textTheme.titleMedium);
+        : Text(sourceModel.name ?? 'News.com', style: textTheme.titleMedium);
   }
 }

@@ -37,6 +37,9 @@ dependencies:
   timeago: ^3.7.1
   flutter_native_splash: ^2.4.6
   flutter_svg: ^2.0.13
+  http: ^1.5.0
+  cached_network_image: ^3.3.0
+
 
 dev_dependencies:
   flutter_test:

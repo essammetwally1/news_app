@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/app_theme.dart';
 
 class CategoryItem extends StatelessWidget {
   final String categoryName;
@@ -6,15 +7,20 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      clipBehavior: Clip.antiAlias,
-      borderRadius: BorderRadius.circular(16),
-
-      child: Image.asset(
-        'assets/categories/$categoryName.png',
-        width: double.infinity,
-        height: MediaQuery.sizeOf(context).height * .25,
-        fit: BoxFit.fill,
+    return Container(
+      height: MediaQuery.sizeOf(context).height * .25,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.white),
+        boxShadow: [BoxShadow(color: AppTheme.white, blurRadius: 5)],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Image.asset(
+          'assets/categories/$categoryName.png',
+          width: double.infinity,
+          fit: BoxFit.fill,
+        ),
       ),
     );
   }

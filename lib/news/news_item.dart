@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/models/post_model.dart';
+import 'package:news_app/models/article_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class NewsItem extends StatelessWidget {
-  final PostModel postModel;
-  const NewsItem({super.key, required this.postModel});
+  final ArticleModel articleModel;
+  const NewsItem({super.key, required this.articleModel});
 
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    DateTime dateTimeDemo = DateTime.now().subtract(Duration(minutes: 15));
     return Container(
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -20,20 +19,27 @@ class NewsItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadiusGeometry.circular(8),
-            child: Image.asset(
-              'assets/${postModel.imagePath}.png',
+            child: Image.network(
+              articleModel.urlToImage ??
+                  'https://static.thenounproject.com/png/504708-200.png',
               width: double.infinity,
               height: MediaQuery.sizeOf(context).height * .3,
               fit: BoxFit.fill,
             ),
           ),
           SizedBox(height: 10),
-          Text(postModel.title, style: textTheme.titleMedium),
+          Text(articleModel.title!, style: textTheme.titleMedium),
           Row(
             children: [
-              Text('By: Essam metwally', style: textTheme.titleSmall),
+              Text(
+                'By: ${articleModel.author ?? articleModel.source.id}',
+                style: textTheme.titleSmall,
+              ),
               Spacer(),
-              Text(timeago.format(dateTimeDemo), style: textTheme.titleSmall),
+              Text(
+                timeago.format(articleModel.publishedAt!),
+                style: textTheme.titleSmall,
+              ),
             ],
           ),
         ],
