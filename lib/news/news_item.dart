@@ -28,6 +28,7 @@ class _NewsItemState extends State<NewsItem> {
       child: Container(
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
+          color: showDetails ? AppTheme.white : null,
           borderRadius: BorderRadius.circular(16),
           border: BoxBorder.all(color: Colors.white),
         ),
@@ -44,12 +45,19 @@ class _NewsItemState extends State<NewsItem> {
               ),
             ),
             SizedBox(height: 10),
-            Text(widget.articleModel.title!, style: textTheme.titleMedium),
+            Text(
+              widget.articleModel.title!,
+              style: showDetails
+                  ? textTheme.titleMedium!.copyWith(color: AppTheme.black)
+                  : textTheme.titleMedium,
+            ),
             showDetails ? SizedBox(height: 10) : SizedBox(),
             showDetails
                 ? Text(
                     widget.articleModel.description!,
-                    style: textTheme.titleMedium,
+                    style: showDetails
+                        ? textTheme.titleSmall!.copyWith(color: AppTheme.black)
+                        : textTheme.titleSmall,
                     maxLines: 4,
                   )
                 : SizedBox(),
@@ -58,14 +66,18 @@ class _NewsItemState extends State<NewsItem> {
                 Expanded(
                   child: Text(
                     'By: ${widget.articleModel.author ?? widget.articleModel.source.id}',
-                    style: textTheme.titleSmall,
+                    style: showDetails
+                        ? textTheme.titleSmall!.copyWith(color: AppTheme.black)
+                        : textTheme.titleSmall,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Spacer(),
                 Text(
                   timeago.format(widget.articleModel.publishedAt!),
-                  style: textTheme.titleSmall,
+                  style: showDetails
+                      ? textTheme.titleSmall!.copyWith(color: AppTheme.black)
+                      : textTheme.titleSmall,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -96,16 +108,14 @@ class _NewsItemState extends State<NewsItem> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.white,
+                              backgroundColor: AppTheme.black,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
                             child: Text(
                               'View Full Article',
-                              style: textTheme.titleMedium!.copyWith(
-                                color: AppTheme.black,
-                              ),
+                              style: textTheme.titleMedium,
                             ),
                           ),
                         ),

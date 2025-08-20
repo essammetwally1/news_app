@@ -16,8 +16,8 @@ class TabItem extends StatelessWidget {
     return isSelected
         ? Text(
             sourceModel.name ?? 'News.com',
-            style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
+            style: textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
           )
-        : Text(sourceModel.name ?? 'News.com', style: textTheme.titleMedium);
+        : Text(sourceModel.name ?? 'News.com', style: textTheme.titleSmall);
   }
 }
