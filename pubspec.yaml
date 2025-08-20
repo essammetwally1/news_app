@@ -39,6 +39,7 @@ dependencies:
   flutter_svg: ^2.0.13
   http: ^1.5.0
   cached_network_image: ^3.3.0
+  webview_flutter: ^4.13.0
 
 
 dev_dependencies:
