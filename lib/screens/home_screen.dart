@@ -5,6 +5,7 @@ import 'package:news_app/categories/categories_view.dart';
 import 'package:news_app/components/home_drawer.dart';
 import 'package:news_app/models/category_model.dart';
 import 'package:news_app/news/news_view.dart';
+import 'package:news_app/screens/search_screnn.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/homescreen';
@@ -18,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   CategoryModel? selectedCategory;
   String? searchFor;
   bool _isSearching = false;
+  bool searchScreen = false;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocus = FocusNode();
 
@@ -34,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ? TextField(
                   controller: _searchController,
                   focusNode: _searchFocus,
-                  autofocus: true,
                   cursorColor: AppTheme.white,
                   style: const TextStyle(color: AppTheme.white, fontSize: 16),
                   decoration: InputDecoration(
@@ -46,9 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (searchFor != null) {
                             selectedCategory = CategoryModel(
                               id: searchFor!,
-                              name: searchFor!.toUpperCase(),
+                              name: searchFor!,
                               imagePath: '',
                             );
+                            searchScreen = true;
                             setState(() {});
                           }
                         },
@@ -78,7 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     _searchController.clear();
                     _isSearching = false;
                     searchFor = null;
-                    setState(() {});
                   },
                   onChanged: (value) {
                     searchFor = value;
@@ -104,6 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
         drawer: HomeDrawer(goToHome: goToHome),
         body: selectedCategory == null
             ? CategoriesView(onSelectCategory: onSelectCategory)
+            : searchScreen
+            ? SearchScreen(categoryId: selectedCategory!.id)
             : NewsView(categoryId: selectedCategory!.id),
       ),
     );
