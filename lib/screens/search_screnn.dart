@@ -10,31 +10,33 @@ class SearchScreen extends StatelessWidget {
   final String categoryId;
   SearchScreen({super.key, required this.categoryId});
 
-  late Future<NewsResponse> newsResponse = ApiService.getNews(categoryId);
+  late Future<NewsResponse> newsResponse = ApiService.getAllNews(categoryId);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: newsResponse,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return LoadingIndicator();
-        } else if (snapshot.hasError || snapshot.data!.status != 'ok') {
-          print(snapshot.error);
-          return ErrorIndicator();
-        } else {
-          List<ArticleModel> articles = snapshot.data?.articles ?? [];
-          return Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-            child: ListView.separated(
-              itemBuilder: (_, index) =>
-                  NewsItem(articleModel: articles[index]),
-              separatorBuilder: (_, _) => SizedBox(height: 16),
-              itemCount: articles.length,
-            ),
-          );
-        }
-      },
+    return Scaffold(
+      body: FutureBuilder(
+        future: newsResponse,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return LoadingIndicator();
+          } else if (snapshot.hasError || snapshot.data!.status != 'ok') {
+            print(snapshot.error);
+            return ErrorIndicator();
+          } else {
+            List<ArticleModel> articles = snapshot.data?.articles ?? [];
+            return Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+              child: ListView.separated(
+                itemBuilder: (_, index) =>
+                    NewsItem(articleModel: articles[index]),
+                separatorBuilder: (_, _) => SizedBox(height: 16),
+                itemCount: articles.length,
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }
