@@ -5,7 +5,7 @@ import 'package:news_app/categories/categories_view.dart';
 import 'package:news_app/components/home_drawer.dart';
 import 'package:news_app/models/category_model.dart';
 import 'package:news_app/news/news_view.dart';
-import 'package:news_app/screens/search_screnn.dart';
+import 'package:news_app/screens/search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/homescreen';
@@ -79,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: AppTheme.white.withValues(alpha: .7),
                           ),
 
-                      // ✅ Proper borders
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: const BorderSide(
