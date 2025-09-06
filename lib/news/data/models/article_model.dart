@@ -1,13 +1,4 @@
-class Source {
-  String? id;
-  String? name;
-
-  Source({this.id, this.name});
-
-  factory Source.fromJson(Map<String, dynamic> json) {
-    return Source(id: json['id'] as String?, name: json['name'] as String?);
-  }
-}
+import 'package:news_app/news/data/models/source.dart';
 
 class ArticleModel {
   Source source;

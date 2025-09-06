@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/api_service/api_service.dart';
 import 'package:news_app/app_theme.dart';
 import 'package:news_app/components/error_indicator.dart';
 import 'package:news_app/components/loading_indicator.dart';
+import 'package:news_app/news/view_model/news_viewmodel.dart';
 import 'package:news_app/sources/data/models/api_source_model.dart';
-import 'package:news_app/models/article_model.dart';
-import 'package:news_app/news/news_item.dart';
+import 'package:news_app/news/data/models/article_model.dart';
+import 'package:news_app/news/view/widgets/news_item.dart';
 import 'package:news_app/sources/view/widgets/tab_item.dart';
 import 'package:news_app/sources/view_model/sources_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +20,7 @@ class NewsView extends StatefulWidget {
 
 class _NewsViewState extends State<NewsView> {
   SourcesViewmodel sourcesViewmodel = SourcesViewmodel();
+  NewSViewmodel newsViewmodel = NewSViewmodel();
 
   int currentIndex = 0;
   @override
@@ -40,6 +41,7 @@ class _NewsViewState extends State<NewsView> {
             return ErrorIndicator(message: viewModel.errorMessage!);
           } else {
             List<SourceModel> sources = viewModel.sources;
+            newsViewmodel.getNews(sources[currentIndex].id!);
             return Column(
               children: [
                 SizedBox(height: 16),
@@ -55,6 +57,7 @@ class _NewsViewState extends State<NewsView> {
                     onTap: (index) {
                       if (currentIndex != index) {
                         currentIndex = index;
+                        // newsViewmodel.getNews(sources[currentIndex].id!);
                         setState(() {});
                       }
                     },
@@ -72,35 +75,36 @@ class _NewsViewState extends State<NewsView> {
 
                 sources.isNotEmpty
                     ? Expanded(
-                        child: FutureBuilder(
-                          future: ApiService.getNews(sources[currentIndex].id!),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return LoadingIndicator();
-                            } else if (snapshot.hasError ||
-                                snapshot.data!.status != 'ok') {
-                              print(snapshot.error);
-                              return ErrorIndicator();
-                            } else {
-                              List<ArticleModel> articles =
-                                  snapshot.data?.articles ?? [];
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 16,
-                                  right: 16,
-                                  top: 16,
-                                ),
-                                child: ListView.separated(
-                                  itemBuilder: (_, index) =>
-                                      NewsItem(articleModel: articles[index]),
-                                  separatorBuilder: (_, _) =>
-                                      SizedBox(height: 16),
-                                  itemCount: articles.length,
-                                ),
-                              );
-                            }
-                          },
+                        child: ChangeNotifierProvider(
+                          create: (_) => newsViewmodel,
+                          child: Consumer<NewSViewmodel>(
+                            builder: (_, viewModel, _) {
+                              if (viewModel.isLoading) {
+                                return LoadingIndicator();
+                              } else if (viewModel.errorMessage != null) {
+                                return ErrorIndicator(
+                                  message: viewModel.errorMessage!,
+                                );
+                              } else {
+                                List<ArticleModel> articles =
+                                    viewModel.newsList;
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 16,
+                                    right: 16,
+                                    top: 16,
+                                  ),
+                                  child: ListView.separated(
+                                    itemBuilder: (_, index) =>
+                                        NewsItem(articleModel: articles[index]),
+                                    separatorBuilder: (_, _) =>
+                                        SizedBox(height: 16),
+                                    itemCount: articles.length,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                         ),
                       )
                     : Text(

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:news_app/api_service/api_service.dart';
 import 'package:news_app/components/error_indicator.dart';
 import 'package:news_app/components/loading_indicator.dart';
-import 'package:news_app/models/article_model.dart';
-import 'package:news_app/models/news_response.dart';
-import 'package:news_app/news/news_item.dart';
+import 'package:news_app/news/data/models/article_model.dart';
+import 'package:news_app/news/data/models/news_response.dart';
+import 'package:news_app/news/view/widgets/news_item.dart';
 
 class SearchScreen extends StatefulWidget {
   final String categoryId;

@@ -4,7 +4,7 @@ import 'package:news_app/app_theme.dart';
 import 'package:news_app/categories/categories_view.dart';
 import 'package:news_app/components/home_drawer.dart';
 import 'package:news_app/models/category_model.dart';
-import 'package:news_app/news/news_view.dart';
+import 'package:news_app/news/view/widgets/news_view.dart';
 import 'package:news_app/screens/search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
