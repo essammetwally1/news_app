@@ -16,148 +16,171 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  CategoryModel? selectedCategory;
-  String? searchFor;
-  bool _isSearching = false;
-  bool searchScreen = false;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocus = FocusNode();
 
+  final ValueNotifier<bool> _isSearching = ValueNotifier(false);
+  final ValueNotifier<String?> _searchFor = ValueNotifier(null);
+  final ValueNotifier<CategoryModel?> _selectedCategory = ValueNotifier(null);
+  final ValueNotifier<bool> _showSearchScreen = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocus.dispose();
+    _isSearching.dispose();
+    _searchFor.dispose();
+    _selectedCategory.dispose();
+    _showSearchScreen.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          surfaceTintColor: Colors.transparent,
-          title: _isSearching
-              ? SizedBox(
-                  height: 40, // ✅ fixes squeezed border issue
-                  child: TextField(
-                    controller: _searchController,
-                    focusNode: _searchFocus,
-                    cursorColor: AppTheme.white,
-                    style: const TextStyle(color: AppTheme.white, fontSize: 16),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                      ),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: InkWell(
-                          splashColor: Colors.transparent,
-                          onTap: () {
-                            if (searchFor != null) {
-                              selectedCategory = CategoryModel(
-                                id: searchFor!,
-                                name: searchFor!,
-                                imagePath: '',
-                              );
-                              searchScreen = true;
-                              setState(() {});
-                            }
-                          },
-                          onDoubleTap: () {
-                            _isSearching = false;
-                            setState(() {});
-                          },
-                          child: SvgPicture.asset(
-                            'assets/icons/search.svg',
-                            colorFilter: const ColorFilter.mode(
-                              AppTheme.white,
-                              BlendMode.srcIn,
+    return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        title: ValueListenableBuilder<bool>(
+          valueListenable: _isSearching,
+          builder: (context, isSearching, _) {
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: isSearching
+                  ? SizedBox(
+                      key: const ValueKey("searchField"),
+                      height: 40,
+                      child: TextField(
+                        controller: _searchController,
+                        focusNode: _searchFocus,
+                        cursorColor: AppTheme.white,
+                        style: const TextStyle(
+                          color: AppTheme.white,
+                          fontSize: 16,
+                        ),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: SvgPicture.asset(
+                              'assets/icons/search.svg',
+                              colorFilter: const ColorFilter.mode(
+                                AppTheme.white,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+
+                            onPressed: () {
+                              if (_searchFor.value?.isNotEmpty == true) {
+                                _selectedCategory.value = CategoryModel(
+                                  id: _searchFor.value!,
+                                  name: _searchFor.value!,
+                                  imagePath: '',
+                                );
+                                _showSearchScreen.value = true;
+                              }
+                            },
+                          ),
+                          hintText: 'Search...',
+                          hintStyle: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(color: AppTheme.white.withAlpha(180)),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: AppTheme.white),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                              color: AppTheme.white,
+                              width: 2,
                             ),
                           ),
                         ),
+                        onChanged: (value) {
+                          _searchFor.value = value;
+                          _showSearchScreen.value = value.isNotEmpty;
+                          if (value.isNotEmpty) {
+                            _selectedCategory.value = CategoryModel(
+                              id: value,
+                              name: value,
+                              imagePath: '',
+                            );
+                          }
+                        },
                       ),
-                      hintText: 'Search...',
-                      hintStyle: Theme.of(context).textTheme.titleMedium
-                          ?.copyWith(
-                            color: AppTheme.white.withValues(alpha: .7),
-                          ),
-
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: AppTheme.white,
-                          width: 1,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(
-                          color: AppTheme.white,
-                          width: 2,
-                        ),
-                      ),
+                    )
+                  : ValueListenableBuilder<CategoryModel?>(
+                      valueListenable: _selectedCategory,
+                      builder: (_, cat, __) {
+                        return Text(
+                          key: const ValueKey("titleText"),
+                          cat?.name ?? 'Home',
+                        );
+                      },
                     ),
-                    onTapOutside: (PointerDownEvent event) {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      _searchController.clear();
-                      _isSearching = false;
-                      searchFor = null;
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        searchFor = value;
-                        if (value.isNotEmpty) {
-                          selectedCategory = CategoryModel(
-                            id: value,
-                            name: value,
-                            imagePath: '',
-                          );
-                          searchScreen = true;
-                        } else {
-                          searchScreen = false;
-                        }
-                      });
-                    },
-                  ),
-                )
-              : Text(
-                  selectedCategory == null ? 'Home' : selectedCategory!.name,
-                ),
-          actions: [
-            if (!_isSearching)
-              IconButton(
-                icon: SvgPicture.asset('assets/icons/search.svg'),
-                onPressed: () {
-                  setState(() {
-                    _isSearching = true;
-                  });
-                },
-              ),
-            const SizedBox(width: 16),
-          ],
+            );
+          },
         ),
-
-        drawer: HomeDrawer(goToHome: goToHome),
-        body: selectedCategory == null
-            ? CategoriesView(onSelectCategory: onSelectCategory)
-            : searchScreen
-            ? SearchScreen(categoryId: selectedCategory!.id)
-            : NewsView(categoryId: selectedCategory!.id),
+        actions: [
+          ValueListenableBuilder<bool>(
+            valueListenable: _isSearching,
+            builder: (context, isSearching, _) {
+              if (!isSearching) {
+                return IconButton(
+                  icon: SvgPicture.asset('assets/icons/search.svg'),
+                  onPressed: () {
+                    _isSearching.value = true;
+                    _searchFocus.requestFocus();
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
+      drawer: HomeDrawer(goToHome: goToHome),
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: _closeSearch,
+        child: ValueListenableBuilder<CategoryModel?>(
+          valueListenable: _selectedCategory,
+          builder: (context, selected, _) {
+            return ValueListenableBuilder<bool>(
+              valueListenable: _showSearchScreen,
+              builder: (context, showSearch, __) {
+                if (selected == null) {
+                  return CategoriesView(onSelectCategory: onSelectCategory);
+                } else if (showSearch) {
+                  return SearchScreen(categoryId: selected.id);
+                } else {
+                  return NewsView(categoryId: selected.id);
+                }
+              },
+            );
+          },
+        ),
       ),
     );
   }
 
   void onSelectCategory(CategoryModel category) {
-    selectedCategory = category;
-    setState(() {});
+    _selectedCategory.value = category;
+  }
+
+  void _closeSearch() {
+    FocusScope.of(context).unfocus();
+    _isSearching.value = false;
+    _searchController.clear();
+    _searchFor.value = null;
+    _showSearchScreen.value = false;
   }
 
   void goToHome() {
-    if (selectedCategory == null) {
-      Navigator.of(context).pop();
-    } else {
-      selectedCategory = null;
-      _isSearching = false;
-      searchScreen = false;
-      Navigator.of(context).pop();
-      setState(() {});
-    }
+    _closeSearch();
+    _selectedCategory.value = null;
+    Navigator.of(context).pop();
   }
 }
