@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ErrorIndicator extends StatelessWidget {
-  const ErrorIndicator({super.key});
+  final String message;
+  const ErrorIndicator({super.key, this.message = 'Something went wrong'});
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'Something went wrong',
-      style: Theme.of(context).textTheme.titleLarge,
-    );
+    return Text(message, style: Theme.of(context).textTheme.titleLarge);
   }
 }

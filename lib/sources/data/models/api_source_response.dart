@@ -1,4 +1,4 @@
-import 'package:news_app/models/api_source_model.dart';
+import 'package:news_app/sources/data/models/api_source_model.dart';
 
 class SourceResponse {
   String? status;

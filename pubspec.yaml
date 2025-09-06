@@ -101,17 +101,17 @@ flutter:
 
 
 
-flutter_native_splash:
-  color: "#171717"
-  image: assets/logo.png
-  branding: assets/branding.png
-  branding_mode: bottom
+# flutter_native_splash:
+#   color: "#171717"
+#   image: assets/logo.png
+#   branding: assets/branding.png
+#   branding_mode: bottom
 
-  android_12:
-    image: assets/logoAndroid12.png
-    icon_background_color: "#171717"
-    branding: assets/branding.png
+#   android_12:
+#     image: assets/logoAndroid12.png
+#     icon_background_color: "#171717"
+#     branding: assets/branding.png
 
-  color_dark: "#171717"
-  image_dark: assets/logo.png
-  branding_dark: assets/branding.png
+#   color_dark: "#171717"
+#   image_dark: assets/logo.png
+#   branding_dark: assets/branding.png
