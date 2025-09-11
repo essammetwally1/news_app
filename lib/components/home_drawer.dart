@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:news_app/app_theme.dart';
+import 'package:news_app/shared/app_theme.dart';
 import 'package:news_app/models/language_model.dart';
 
 class HomeDrawer extends StatefulWidget {

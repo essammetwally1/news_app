@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/app_theme.dart';
+import 'package:news_app/shared/app_theme.dart';
 import 'package:news_app/components/error_indicator.dart';
 import 'package:news_app/components/loading_indicator.dart';
 import 'package:news_app/news/view_model/news_viewmodel.dart';
@@ -20,7 +20,7 @@ class NewsView extends StatefulWidget {
 
 class _NewsViewState extends State<NewsView> {
   SourcesViewmodel sourcesViewmodel = SourcesViewmodel();
-  NewSViewmodel newsViewmodel = NewSViewmodel();
+  NewsViewmodel newsViewmodel = NewsViewmodel();
 
   int currentIndex = 0;
   @override
@@ -77,7 +77,7 @@ class _NewsViewState extends State<NewsView> {
                     ? Expanded(
                         child: ChangeNotifierProvider(
                           create: (_) => newsViewmodel,
-                          child: Consumer<NewSViewmodel>(
+                          child: Consumer<NewsViewmodel>(
                             builder: (_, viewModel, _) {
                               if (viewModel.isLoading) {
                                 return LoadingIndicator();
